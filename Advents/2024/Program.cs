@@ -269,38 +269,36 @@ int Day4Part2()
     listGlobale.Add(listDMontanteInverse);
 
     var result = 0;
-    string pat = @"MAS";
 
-    for (int line = 0; line < listGlobale[0].Count(); line++)
-    {
-        for (int posChar = 0; posChar < listGlobale[0][line].Length - 2; posChar++)
-        {
-            if (listGlobale[0][line][posChar] == pat[0] && listGlobale[0][line][posChar + 1] == pat[1] && listGlobale[0][line][posChar + 2] == pat[2])
-            {
-
-                if (listGlobale[2])
-
-            }
-        }
-    }
-
-
-    for (int list = 0; list < listGlobale.Count(); list++)
-    {
-        for (int line = 0; line < listGlobale.Count(); line++)
-        {
-            for (int posChar = 0;  posChar < listGlobale[list][line].Length - 2; posChar++)
-            {
-                if (listGlobale[list][line][posChar] == pat[0] && listGlobale[list][line][posChar+1] == pat[1] && listGlobale[list][line][posChar+2] == pat[2])
-                {
-
-                }
-            }
-        }
-    }
-
+    var findedListDMontante = GetFindedPositions(listDMontante);
+    var findedListDDescendante = GetFindedPositions(listDDescendante);
+    var findedListDMontanteInverse = GetFindedPositions(listDMontanteInverse);
+    var findedListDDescendanteInverse = GetFindedPositions(listDDescendanteInverse);
 
     return result;
+}
+
+List<int[]> GetFindedPositions(List<string> entryListe)
+{
+    List<int[]> findedDMontante = new List<int[]>();
+
+    string pat = @"MAS";
+
+    for (int line = 0; line < entryListe.Count(); line++)
+    {
+        for (int posChar = 0; posChar < entryListe[line].Length - 2; posChar++)
+        {
+            if (entryListe[line][posChar] == pat[0] && entryListe[line][posChar + 1] == pat[1] && entryListe[line][posChar + 2] == pat[2])
+            {
+                var tab = new int[2];
+                tab[0] = posChar;
+                tab[1] = line;
+                findedDMontante.Add(tab);
+            }
+        }
+    }
+
+    return findedDMontante;
 }
 
 List<string> Inverse(List<string> listToInverse)

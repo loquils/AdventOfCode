@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 
-Console.WriteLine(Day4Part1());
+Console.WriteLine(Day5Part1());
 
 #region Day1
 int Day1Part1()
@@ -225,8 +225,8 @@ int Day4Part2()
 }
 #endregion
 
-#region Day4
-int Day4Part1()
+#region Day5
+int Day5Part1()
 {
     var entry = "iwrupvqb";
 
@@ -248,7 +248,7 @@ int Day4Part1()
     return added - 1;
 }
 
-int Day4Part2()
+int Day5Part2()
 {
     var entry = "iwrupvqb";
 

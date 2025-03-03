@@ -106,22 +106,22 @@ List<BesoinMetier> DefineBesoinPaysans()
         new BesoinMetier(10, 20, RechercheCraft("Michette"), 507),
         new BesoinMetier(20, 30, RechercheCraft("Beignet carasau"), 404),
         new BesoinMetier(30, 40, RechercheCraft("Fougasse"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain aux flocons d'avoine"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain de mie"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Briochette"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain consistant"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Biscotte"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain d'épice"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain de seigle"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain des villes"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain aux céréales"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Borodinski"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain gre"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Mantou"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Tortilla"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain des champs"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Pain tahde"), 367),
-        new BesoinMetier(30, 40, RechercheCraft("Brioche dorée"), 367),
+        new BesoinMetier(40, 50, RechercheCraft("Pain aux flocons d'avoine"), 367),
+        new BesoinMetier(50, 60, RechercheCraft("Pain de mie"), 367),
+        new BesoinMetier(60, 70, RechercheCraft("Briochette"), 367),
+        new BesoinMetier(70, 80, RechercheCraft("Pain consistant"), 367),
+        new BesoinMetier(80, 90, RechercheCraft("Biscotte"), 367),
+        new BesoinMetier(90, 100, RechercheCraft("Pain d'épice"), 367),
+        new BesoinMetier(100, 110, RechercheCraft("Pain de seigle"), 367),
+        new BesoinMetier(110, 120, RechercheCraft("Pain des villes"), 367),
+        new BesoinMetier(120, 130, RechercheCraft("Pain aux céréales"), 367),
+        new BesoinMetier(130, 140, RechercheCraft("Borodinski"), 367),
+        new BesoinMetier(140, 150, RechercheCraft("Pain gre"), 367),
+        new BesoinMetier(150, 160, RechercheCraft("Mantou"), 367),
+        new BesoinMetier(160, 170, RechercheCraft("Tortilla"), 367),
+        new BesoinMetier(170, 180, RechercheCraft("Pain des champs"), 367),
+        new BesoinMetier(180, 190, RechercheCraft("Pain tahde"), 367),
+        new BesoinMetier(190, 200, RechercheCraft("Brioche dorée"), 367),
     };
 
     return ListeBesoinsPaysans;
@@ -134,12 +134,72 @@ var ListeBesoinsMetiers = DefineBesoinPaysans();
 #region --------------------------------MAIN------------------------------------------
 
 int niveauDepart = 0;
-int niveauArrivee = 30;
+int niveauArrivee = 100;
 
-var coin = RechercheBesoin(niveauDepart, niveauArrivee);
+var besoinsMetier = RechercheBesoin(niveauDepart, niveauArrivee);
 
-var cccc = "";
+var allItemsNeeded = CalculQuantiteItems(besoinsMetier);
+
+RessourceType coin = default;
+
+var valeurParType = 0;
+var bigTotal = 0;
+
+foreach (var endItem in allItemsNeeded)
+{
+    if (coin == default || coin != endItem.Key.RessourceType)
+    {
+        if (valeurParType != 0)
+        {
+            Console.WriteLine($"\n=====> {coin} = {valeurParType} kamas !\n");
+            bigTotal += valeurParType;
+            valeurParType = 0;
+        }
+
+        Console.WriteLine($"--------{endItem.Key.RessourceType}----------");
+        coin = endItem.Key.RessourceType;
+    }
+
+    Console.WriteLine($"{endItem.Key.Name} x{endItem.Value} = {endItem.Key.PrixMoyen * endItem.Value} kamas.");
+    valeurParType += endItem.Key.PrixMoyen * endItem.Value;
+
+    if (endItem.Equals(allItemsNeeded.Last()))
+    {
+        Console.WriteLine($"\n=====> {coin} = {valeurParType} kamas !\n");
+        bigTotal += valeurParType;
+    }
+
+}
+
+Console.WriteLine($"\nBig Total ======= {bigTotal} kamas !\n");
+
 #endregion
+
+Dictionary<Ressource, int> CalculQuantiteItems(List<BesoinMetier> besoins)
+{
+    var result = new Dictionary<Ressource, int>();
+    foreach (var besoin in besoins)
+    {
+        foreach (var craft in besoin.QuantiteeCraft)
+        {
+            foreach (var item in craft.Key.CraftItems)
+            {
+                if (result.ContainsKey(item.Key))
+                {
+                    result[item.Key] += item.Value * craft.Value;
+                }
+                else
+                {
+                    result[item.Key] = item.Value * craft.Value;
+                }
+            }
+        }
+    }
+    
+    return result.OrderBy(x => (int)x.Key.RessourceType).ToDictionary(x => x.Key, x => x.Value);
+}
+
+
 
 List<BesoinMetier> RechercheBesoin(int niveauDepart, int niveauArrivee)
 {

@@ -8,6 +8,7 @@ namespace DofMetiers
 {
     public enum RessourceType
     {
+        Unknown,
         Paysan,
         Alchimie,
         Random
